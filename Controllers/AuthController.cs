@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProductAPI.Models;
+using ProductAPI.Data;
 using ProductAPI.Services;
+using ProductAPI.Helpers;
 
 namespace ProductAPI.Controllers
 {
@@ -18,18 +20,21 @@ namespace ProductAPI.Controllers
             _jwtService = jwtService;
         }
 
-        //LOGIN
+        // LOGIN
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
+            var err = ValidationHelper.ValidateLogin(request);
+            if (err != null) return BadRequest(err);
+
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Username == request.Username);
 
             if (user == null)
-                return Unauthorized(new { message = "Tài khoản không tồn tại" });
+                return Unauthorized("Tài khoản không tồn tại");
 
-            // verify password hash
             if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
-                return Unauthorized(new { message = "Sai mật khẩu" });
+                return Unauthorized("Sai mật khẩu");
 
             var token = _jwtService.GenerateToken(user.Username, user.Role);
 
@@ -45,37 +50,41 @@ namespace ProductAPI.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest req)
         {
+            var err = ValidationHelper.ValidateRegister(req);
+            if (err != null) return BadRequest(err);
+
             if (await _context.Users.AnyAsync(x => x.Username == req.Username))
                 return BadRequest("Username đã tồn tại");
-
-            if (await _context.Users.AnyAsync(x => x.Email == req.Email))
-                return BadRequest("Email đã tồn tại");
 
             var user = new User
             {
                 Username = req.Username,
-                Email = req.Email,
-                Role = "user",
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(req.Password)
+                FullName = req.FullName,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(req.Password),
+                Role = "user"
             };
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return StatusCode(201, new { message = "Đăng ký thành công" });
+            return Ok(new { message = "Đăng ký thành công" });
         }
 
         // FORGOT PASSWORD
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest req)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == req.Email);
+            var err = ValidationHelper.ValidateForgot(req);
+            if (err != null) return BadRequest(err);
+
+            var user = await _context.Users.FirstOrDefaultAsync(x =>
+                x.Email == req.Email && x.PhoneNumber == req.PhoneNumber
+            );
 
             if (user == null)
-                return NotFound("Email không tồn tại");
+                return NotFound("Email hoặc số điện thoại không đúng");
 
             var token = Guid.NewGuid().ToString();
-
             user.ResetToken = token;
             user.ResetTokenExpire = DateTime.UtcNow.AddMinutes(10);
 
@@ -83,15 +92,20 @@ namespace ProductAPI.Controllers
 
             return Ok(new
             {
-                message = "Đã tạo mã reset. Dùng mã này gọi API reset-password.",
+                message = "Đã tạo mã reset",
                 token = token
             });
         }
+
         // RESET PASSWORD
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest req)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.ResetToken == req.Token);
+            var err = ValidationHelper.ValidateReset(req);
+            if (err != null) return BadRequest(err);
+
+            var user = await _context.Users
+                .FirstOrDefaultAsync(x => x.ResetToken == req.Token);
 
             if (user == null)
                 return BadRequest("Token không hợp lệ");

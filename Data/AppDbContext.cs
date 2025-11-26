@@ -1,7 +1,12 @@
 using Microsoft.EntityFrameworkCore;
-public class AppDbContext : DbContext
-{
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) {}
+using ProductAPI.Models;
 
-    public DbSet<User> Users { get; set; }
+namespace ProductAPI.Data
+{
+    public class AppDbContext : DbContext
+    {
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+        public DbSet<User> Users { get; set; }
+    }
 }

@@ -2,8 +2,6 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using FluentValidation;
-using FluentValidation.AspNetCore;
 using ProductAPI.Data;
 using ProductAPI.Services;
 
@@ -21,9 +19,7 @@ builder.Services.AddSwaggerGen();
 // Add JwtService (DI)
 builder.Services.AddScoped<JwtService>();
 
-// Add FluentValidation
-builder.Services.AddValidatorsFromAssemblyContaining<RegisterValidator>();
-builder.Services.AddFluentValidationAutoValidation();
+
 
 // Authentication: JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -78,4 +74,8 @@ app.UseMiddleware<RoleMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapCon
+// MAP CONTROLLERS
+app.MapControllers();
+
+// RUN APP
+app.Run();
