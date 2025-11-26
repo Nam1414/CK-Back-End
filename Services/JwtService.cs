@@ -14,14 +14,19 @@ namespace ProductAPI.Services
 
         public JwtService(IConfiguration config)
         {
-            _key = config["Jwt:Key"];
-            _issuer = config["Jwt:Issuer"];
-            _audience = config["Jwt:Audience"];
+            _key = config["Jwt:Key"] 
+                   ?? throw new Exception("Jwt:Key is missing in appsettings.json");
+
+            _issuer = config["Jwt:Issuer"] 
+                      ?? throw new Exception("Jwt:Issuer is missing");
+
+            _audience = config["Jwt:Audience"] 
+                        ?? throw new Exception("Jwt:Audience is missing");
         }
 
         public string GenerateToken(string username, string role)
         {
-            var claims = new[]
+            var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, username),
                 new Claim(ClaimTypes.Role, role)
@@ -34,7 +39,7 @@ namespace ProductAPI.Services
                 issuer: _issuer,
                 audience: _audience,
                 claims: claims,
-                expires: DateTime.UtcNow.AddHours(1),
+                expires: DateTime.UtcNow.AddHours(2),
                 signingCredentials: creds
             );
 

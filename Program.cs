@@ -7,21 +7,19 @@ using ProductAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add DbContext
+// DATABASE
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add Controllers
+// CONTROLLERS + SWAGGER
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Add JwtService (DI)
+// JWT SERVICE (DI)
 builder.Services.AddScoped<JwtService>();
 
-
-
-// Authentication: JWT
+// JWT AUTHENTICATION
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -31,14 +29,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
+
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
+
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
         };
     });
 
-// Authorization: Role-based
+// ROLE AUTHORIZATION
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
@@ -51,13 +51,14 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAll", policy =>
     {
         policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader();
+              .AllowAnyHeader()
+              .AllowAnyMethod();
     });
 });
 
 var app = builder.Build();
 
+// SWAGGER
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -67,15 +68,15 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 
-// Middlewares
-app.UseMiddleware<RoleMiddleware>();
-
-// Authentication + Authorization
+//  QUAN TRỌNG: authentication → authorization → role middleware
 app.UseAuthentication();
 app.UseAuthorization();
 
-// MAP CONTROLLERS
+// Middleware kiểm tra role
+app.UseMiddleware<RoleMiddleware>();
+
+// MAP API
 app.MapControllers();
 
-// RUN APP
+// RUN
 app.Run();

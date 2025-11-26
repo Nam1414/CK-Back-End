@@ -60,8 +60,10 @@ namespace ProductAPI.Controllers
             {
                 Username = req.Username,
                 FullName = req.FullName,
+                Email = req.Email,
+                PhoneNumber = req.PhoneNumber,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(req.Password),
-                Role = "user"
+                Role = "User"
             };
 
             _context.Users.Add(user);

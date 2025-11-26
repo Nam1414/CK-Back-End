@@ -11,10 +11,17 @@ public class RoleMiddleware
 
     public async Task Invoke(HttpContext context)
     {
-        if (context.User.Identity != null && context.User.Identity.IsAuthenticated)
+        var path = context.Request.Path.Value?.ToLower();
+        var method = context.Request.Method;
+
+        var role = context.User.FindFirst(ClaimTypes.Role)?.Value;
+
+        // Ví dụ: chặn DELETE bất kỳ nếu không phải Admin
+        if (method == "DELETE" && role != "Admin")
         {
-            var role = context.User.FindFirst(ClaimTypes.Role)?.Value;
-            context.Items["UserRole"] = role;
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            await context.Response.WriteAsync("Chỉ Admin mới được phép xóa");
+            return;
         }
 
         await _next(context);

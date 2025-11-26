@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ProductAPI.Services;
-using ProductModel = ProductAPI.Models.Product;  // ← THÊM DÒNG NÀY (alias)
+using ProductAPI.Data;
+using ProductAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ProductAPI.Controllers
 {
@@ -10,68 +11,85 @@ namespace ProductAPI.Controllers
     [Authorize]
     public class ProductsController : ControllerBase
     {
+        private readonly AppDbContext _context;
+        public ProductsController(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        // USER + ADMIN
         [HttpGet]
-        public IActionResult GetProducts()
+        public async Task<IActionResult> GetAll()
         {
-            return Ok(DataStore.Products);
+            return Ok(await _context.Products.ToListAsync());
         }
 
-        [HttpGet("{id}")]
-        public IActionResult GetProduct(int id)
-        {
-            var product = DataStore.Products.FirstOrDefault(p => p.Id == id);
-            if (product == null)
-                return NotFound(new { message = "Không tìm thấy sản phẩm" });
-            return Ok(product);
-        }
-
+        // ADMIN
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public IActionResult CreateProduct([FromBody] ProductModel product)  // ← ĐỔI Product → ProductModel
+        public async Task<IActionResult> Create([FromBody] ProductCreateRequest req)
         {
-            if (string.IsNullOrEmpty(product.Name))
-                return BadRequest(new { message = "Tên sản phẩm không được rỗng" });
-            if (product.Price < 0)
-                return BadRequest(new { message = "Giá phải lớn hơn hoặc bằng 0" });
-            if (product.Stock < 0)
-                return BadRequest(new { message = "Tồn kho phải lớn hơn hoặc bằng 0" });
+            if (string.IsNullOrWhiteSpace(req.Name))
+                return BadRequest("Tên sản phẩm không được rỗng");
 
-            product.Id = DataStore.NextProductId++;
-            DataStore.Products.Add(product);
-            return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
+            if (req.Price < 0)
+                return BadRequest("Giá phải >= 0");
+
+            if (req.Stock < 0)
+                return BadRequest("Tồn kho phải >= 0");
+
+            var product = new Product
+            {
+                Name = req.Name,
+                Price = req.Price,
+                Stock = req.Stock,
+                Description = req.Description
+            };
+
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetAll), new { id = product.Id }, product);
         }
 
+        // ADMIN
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
-        public IActionResult UpdateProduct(int id, [FromBody] ProductModel product)  // ← ĐỔI Product → ProductModel
+        public async Task<IActionResult> Update(int id, [FromBody] ProductUpdateRequest req)
         {
-            var existingProduct = DataStore.Products.FirstOrDefault(p => p.Id == id);
-            if (existingProduct == null)
-                return NotFound(new { message = "Không tìm thấy sản phẩm" });
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
+                return NotFound("Không tìm thấy sản phẩm");
 
-            if (string.IsNullOrEmpty(product.Name))
-                return BadRequest(new { message = "Tên sản phẩm không được rỗng" });
-            if (product.Price < 0)
-                return BadRequest(new { message = "Giá phải lớn hơn hoặc bằng 0" });
-            if (product.Stock < 0)
-                return BadRequest(new { message = "Tồn kho phải lớn hơn hoặc bằng 0" });
+            if (string.IsNullOrWhiteSpace(req.Name))
+                return BadRequest("Tên sản phẩm không được rỗng");
 
-            existingProduct.Name = product.Name;
-            existingProduct.Price = product.Price;
-            existingProduct.Description = product.Description;
-            existingProduct.Stock = product.Stock;
+            if (req.Price < 0)
+                return BadRequest("Giá phải >= 0");
+
+            if (req.Stock < 0)
+                return BadRequest("Tồn kho phải >= 0");
+
+            product.Name = req.Name;
+            product.Price = req.Price;
+            product.Stock = req.Stock;
+            product.Description = req.Description;
+
+            await _context.SaveChangesAsync();
             return NoContent();
         }
 
+        // ADMIN
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
-        public IActionResult DeleteProduct(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var product = DataStore.Products.FirstOrDefault(p => p.Id == id);
+            var product = await _context.Products.FindAsync(id);
             if (product == null)
-                return NotFound(new { message = "Không tìm thấy sản phẩm" });
+                return NotFound();
 
-            DataStore.Products.Remove(product);
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync();
             return NoContent();
         }
     }
