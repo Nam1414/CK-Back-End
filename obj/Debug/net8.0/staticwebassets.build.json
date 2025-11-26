@@ -1,0 +1,39 @@
+{
+  "Version": 1,
+  "Hash": "Xgd4s4adP99hFJx7iy7jC1CtcazIdWmFskFmAKekD4k=",
+  "Source": "OrderManagementAPI",
+  "BasePath": "_content/OrderManagementAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "OrderManagementAPI\\wwwroot",
+      "Source": "OrderManagementAPI",
+      "ContentRoot": "E:\\BE CK\\OrderManagementAPI\\wwwroot\\",
+      "BasePath": "_content/OrderManagementAPI",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "E:\\BE CK\\OrderManagementAPI\\wwwroot\\index.html",
+      "SourceId": "OrderManagementAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\BE CK\\OrderManagementAPI\\wwwroot\\",
+      "BasePath": "_content/OrderManagementAPI",
+      "RelativePath": "index.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\index.html"
+    }
+  ]
+}
