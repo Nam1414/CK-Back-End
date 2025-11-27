@@ -899,6 +899,10 @@
                 <input type="text" id="regFullName" required placeholder="Nhập họ và tên">
             </div>
             <div class="form-group">
+    <label>Email <span class="required-mark">*</span></label>
+    <input type="email" id="regEmail" required placeholder="Nhập email (để lấy lại mật khẩu)">
+</div>
+            <div class="form-group">
                 <label>Mật khẩu <span class="required-mark">*</span></label>
                 <input type="password" id="regPassword" required placeholder="Nhập mật khẩu (tối thiểu 6 ký tự)">
             </div>
@@ -1098,57 +1102,48 @@
             <h2>⚙️ Cài đặt tài khoản</h2>
         </div>
         <form id="profileForm">
-            <div class="form-group">
-                <label>Tên đăng nhập</label>
-                <input type="text" id="profileUsername" disabled style="background: #f0f0f0; cursor: not-allowed;">
-            </div>
-            <div class="form-group">
-                <label>Vai trò</label>
-                <input type="text" id="profileRole" disabled style="background: #f0f0f0; cursor: not-allowed;">
-            </div>
-            <div class="form-group">
-                <label>Họ và tên <span class="required-mark">*</span></label>
-                <input type="text" id="profileFullName" required placeholder="Nhập họ và tên">
-            </div>
-            <div class="form-group">
-                <label>Số điện thoại <span class="required-mark">*</span></label>
-                <input type="text" id="profilePhone" required placeholder="Nhập số điện thoại">
-            </div>
-            <div class="form-group">
-                <label>Email <span class="required-mark">*</span></label>
-                <input type="email" id="profileEmail" required placeholder="Nhập email">
-            </div>
-             <div class="form-group">
-                <label>Ngày sinh</label>
-                <input type="date" id="profileDob">
-            </div>
-            <hr style="margin: 25px 0; border: none; border-top: 2px solid #f0f0f0;">
-            <h3 style="margin-bottom: 15px; color: #333;">🔐 Đổi mật khẩu</h3>            
-            <div class="form-group">
-                <label>Mật khẩu hiện tại <span class="required-mark">*</span></label>
-                <input type="password" id="currentPassword" placeholder="Nhập mật khẩu hiện tại">
-            </div>
-            <div class="form-group">
-                <label>Mật khẩu mới <span class="required-mark">*</span></label>
-                <input type="password" id="newPassword" placeholder="Nhập mật khẩu mới (tối thiểu 6 ký tự)">
-            </div>
-            <div class="form-group">
-                <label>Xác nhận mật khẩu mới <span class="required-mark">*</span></label>
-                <input type="password" id="confirmNewPassword" placeholder="Nhập lại mật khẩu mới">
-            </div>
+    <div class="form-group">
+        <label>Tên đăng nhập</label>
+        <input type="text" id="profileUsername" disabled style="background: #f0f0f0; cursor: not-allowed;">
+    </div>
+    <div class="form-group">
+        <label>Vai trò</label>
+        <input type="text" id="profileRole" disabled style="background: #f0f0f0; cursor: not-allowed;">
+    </div>
+    <div class="form-group">
+        <label>Họ và tên <span class="required-mark">*</span></label>
+        <input type="text" id="profileFullName" required placeholder="Nhập họ và tên">
+    </div>
+    <div class="form-group">
+        <label>Email <span class="required-mark">*</span></label>
+        <input type="email" id="profileEmail" required placeholder="Nhập email">
+    </div>
 
-            <div id="adminSection" style="display: none; margin-top: 30px; padding-top: 20px; border-top: 2px solid #eee;">
-                <h3 style="margin-bottom: 15px; color: #333;">👥 Quản lý người dùng</h3>
-                <div id="userList" style="background: #f9f9f9; border-radius: 8px; padding: 10px;">
-                    <!-- User list rendered here -->
-                </div>
-            </div>
+    <hr style="margin: 25px 0; border: none; border-top: 2px solid #f0f0f0;">
+    <h3 style="margin-bottom: 15px; color: #333;">🔐 Đổi mật khẩu (Không bắt buộc)</h3>            
+    <div class="form-group">
+        <label>Mật khẩu hiện tại</label>
+        <input type="password" id="currentPassword" placeholder="Nhập mật khẩu hiện tại">
+    </div>
+    <div class="form-group">
+        <label>Mật khẩu mới</label>
+        <input type="password" id="newPassword" placeholder="Nhập mật khẩu mới (tối thiểu 6 ký tự)">
+    </div>
+    <div class="form-group">
+        <label>Xác nhận mật khẩu mới</label>
+        <input type="password" id="confirmNewPassword" placeholder="Nhập lại mật khẩu mới">
+    </div>
 
-            <div class="modal-actions">
-                <button type="button" class="btn-secondary" onclick="closeProfileModal()">Hủy</button>
-                <button type="submit" class="btn-primary">💾 Lưu thay đổi</button>
-            </div>
-        </form>
+    <div id="adminSection" style="display: none; margin-top: 30px; padding-top: 20px; border-top: 2px solid #eee;">
+        <h3 style="margin-bottom: 15px; color: #333;">👥 Quản lý người dùng</h3>
+        <div id="userList" style="background: #f9f9f9; border-radius: 8px; padding: 10px;"></div>
+    </div>
+
+    <div class="modal-actions">
+        <button type="button" class="btn-secondary" onclick="closeProfileModal()">Hủy</button>
+        <button type="submit" class="btn-primary">💾 Lưu thay đổi</button>
+    </div>
+</form>
     </div>
 </div>
 
@@ -1202,21 +1197,31 @@ async function fetchAPI(endpoint, method = 'GET', body = null) {
     let currentFilter = 'all';
     let fpCurrentIdentity = '';
 
-    // Initialize
-    // function init() {
-    //     loadData();
-    //     if (currentUser) {
-    //         showApp();
-    //     }
-    //     setupAuthToggle();
-    // }
-    async function init() {
+
+//     async function init() {
+//     const savedUser = localStorage.getItem('currentUser');
+//     if (savedUser && token) {
+//         currentUser = JSON.parse(savedUser);
+//         showApp();
+//     } else {
+//         setupAuthToggle();
+//     }
+// }
+function init() {
+    // LUÔN LUÔN cài đặt các nút bấm chuyển đổi giao diện trước
+    setupAuthToggle();
+
+    // Sau đó mới kiểm tra đăng nhập
     const savedUser = localStorage.getItem('currentUser');
-    if (savedUser && token) {
-        currentUser = JSON.parse(savedUser);
-        showApp();
+    if (savedUser && token && savedUser !== "undefined") {
+        try {
+            currentUser = JSON.parse(savedUser);
+            showApp();
+        } catch (e) {
+            logout();
+        }
     } else {
-        setupAuthToggle();
+        showLogin();
     }
 }
 document.getElementById('loginForm').addEventListener('submit', async function(e) {
@@ -1224,36 +1229,23 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
     
-    // Disable nút để tránh bấm nhiều lần
     const btn = e.target.querySelector('button');
-    btn.innerText = "Đang xử lý...";
-    btn.disabled = true;
+    btn.innerText = "Đang xử lý..."; btn.disabled = true;
 
     try {
-        // Gọi API Login
         const data = await fetchAPI('auth/login', 'POST', { username, password });
         
-        console.log("Login Data:", data); // Debug xem server trả về gì
-
-        if (data && data.token) {
-            // Lưu Token và User vào LocalStorage
-            localStorage.setItem('token', data.token);
-            currentUser = data.user;
+        if (data && (data.token || data.Token)) {
+            token = data.token || data.Token;
+            currentUser = data.user || data.User;
+            localStorage.setItem('token', token);
             localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            
-            alert('✅ Đăng nhập thành công!');
             showApp();
         } else {
-            // Nếu fetchAPI trả về null hoặc lỗi logic
-            alert('❌ Đăng nhập thất bại. Vui lòng kiểm tra lại tài khoản/mật khẩu.');
+            alert('❌ Sai tên đăng nhập hoặc mật khẩu!');
         }
-    } catch (err) {
-        console.error(err);
-        alert('Lỗi hệ thống khi đăng nhập.');
-    } finally {
-        btn.innerText = "Đăng nhập";
-        btn.disabled = false;
-    }
+    } catch (err) { alert('Lỗi kết nối'); }
+    finally { btn.innerText = "Đăng nhập"; btn.disabled = false; }
 });
 
     function loadData() {
@@ -1291,44 +1283,38 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
         document.getElementById("loginPage").style.display = "none";
         document.getElementById("registerPage").style.display = "block";
     }
-    function setupAuthToggle() {
-        const toggleAuth = document.getElementById('toggleAuth');
-        const loginForm = document.getElementById('loginForm');
-        const registerForm = document.getElementById('registerForm');
-        const authSubtitle = document.getElementById('authSubtitle');
-        const toggleText = document.getElementById('toggleText');
-        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
-        const forgotPasswordForm = document.getElementById('forgotPasswordForm');
-        const authToggleContainer = document.getElementById('authToggleContainer');
+ function setupAuthToggle() {
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const forgotForm = document.getElementById('forgotPasswordForm');
+    
+    const authSubtitle = document.getElementById('authSubtitle');
+    const authToggleContainer = document.getElementById('authToggleContainer');
+    
+    // Nút chuyển Login/Register
+    const toggleAuth = document.getElementById('toggleAuth');
+    
+    // Nút Quên mật khẩu
+    const forgotLink = document.getElementById('forgotPasswordLink');
 
-        toggleAuth.addEventListener('click', function(e) {
+    // --- LOGIC 1: BẤM NÚT QUÊN MẬT KHẨU ---
+    if (forgotLink) {
+        // Reset sự kiện cũ để tránh lỗi
+        const newForgotLink = forgotLink.cloneNode(true);
+        forgotLink.parentNode.replaceChild(newForgotLink, forgotLink);
+
+        newForgotLink.addEventListener('click', function(e) {
             e.preventDefault();
-            if (loginForm.style.display === 'none') {
-                showLogin();
-            } else 
-{                // Show Register Form
-                loginForm.style.display = 'none';
-                registerForm.style.display = 'block';
-                forgotPasswordForm.style.display = 'none';
-                authToggleContainer.style.display = 'none';
-                authSubtitle.textContent = 'Tạo tài khoản mới';
-                
-                // Clear fields
-                document.getElementById('regUsername').value = '';
-                document.getElementById('regFullName').value = '';
-                document.getElementById('regPassword').value = '';
-                document.getElementById('regConfirmPassword').value = '';
-            }
-        });
-        forgotPasswordLink.addEventListener('click', function(e) {
-            e.preventDefault();
+            console.log("Đã bấm Quên mật khẩu");
+
+            // Ẩn Login, Hiện Forgot
             loginForm.style.display = 'none';
             registerForm.style.display = 'none';
-            forgotPasswordForm.style.display = 'block';
+            forgotForm.style.display = 'block';
             authToggleContainer.style.display = 'none';
             authSubtitle.textContent = 'Khôi phục mật khẩu';
-            
-            // Reset FP steps
+
+            // Reset các bước OTP về ban đầu
             document.getElementById('fpStep1').style.display = 'block';
             document.getElementById('fpStep2').style.display = 'none';
             document.getElementById('fpStep3').style.display = 'none';
@@ -1336,93 +1322,216 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
         });
     }
 
-    function showLogin() {
-        document.getElementById('loginForm').style.display = 'block';
-        document.getElementById('registerForm').style.display = 'none';
-        document.getElementById('forgotPasswordForm').style.display = 'none';
-        document.getElementById('authToggleContainer').style.display = 'block';
-        document.getElementById('authSubtitle').textContent = 'Đăng nhập để tiếp tục';
-        document.getElementById('toggleText').textContent = 'Chưa có tài khoản?';
-        document.getElementById('toggleAuth').textContent = 'Đăng ký ngay';
-        document.getElementById('username').value = '';
-        document.getElementById('password').value = '';
+    // --- LOGIC 2: BẤM NÚT ĐĂNG KÝ NGAY / ĐĂNG NHẬP NGAY ---
+    if (toggleAuth) {
+        const newToggleBtn = toggleAuth.cloneNode(true);
+        toggleAuth.parentNode.replaceChild(newToggleBtn, toggleAuth);
+
+        newToggleBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (loginForm.style.display === 'none') {
+                showLogin(); // Đang ở trang khác -> Về Login
+            } else {
+                // Đang ở Login -> Sang Register
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+                forgotForm.style.display = 'none';
+                authToggleContainer.style.display = 'block'; // Vẫn hiện nút để quay lại
+                
+                authSubtitle.textContent = 'Tạo tài khoản mới';
+                document.getElementById('toggleText').textContent = 'Đã có tài khoản?';
+                newToggleBtn.textContent = 'Đăng nhập ngay';
+                
+                // Clear form
+                document.getElementById('regUsername').value = '';
+                document.getElementById('regFullName').value = '';
+                document.getElementById('regPassword').value = '';
+            }
+        });
     }
-    // Register
-       document.getElementById('registerForm').addEventListener('submit', async function(e) {
+}
+
+    function showLogin() {
+    document.getElementById('loginForm').style.display = 'block';
+    document.getElementById('registerForm').style.display = 'none';
+    document.getElementById('forgotPasswordForm').style.display = 'none';
+    document.getElementById('authToggleContainer').style.display = 'block';
+    
+    document.getElementById('authSubtitle').textContent = 'Đăng nhập để tiếp tục';
+    document.getElementById('toggleText').textContent = 'Chưa có tài khoản?';
+    document.getElementById('toggleAuth').textContent = 'Đăng ký ngay';
+    
+    // Clear input
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
+}
+   // --- 1. ĐĂNG KÝ ---
+document.getElementById('registerForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     
+    // Lấy dữ liệu
     const username = document.getElementById('regUsername').value.trim();
     const fullName = document.getElementById('regFullName').value.trim();
+    const email = document.getElementById('regEmail').value.trim(); // <--- Cần input HTML id="regEmail"
     const password = document.getElementById('regPassword').value;
     const confirmPassword = document.getElementById('regConfirmPassword').value;
 
-    // Validate phía Client
-    if (password.length < 6) {
-        alert('⚠️ Mật khẩu phải có ít nhất 6 ký tự!');
-        return;
-    }
-    if (password !== confirmPassword) {
-        alert('⚠️ Mật khẩu xác nhận không khớp!');
-        return;
+    // 👇 THÊM ĐOẠN NÀY: Kiểm tra dữ liệu rỗng
+    if (!username || !email || !password) {
+        return alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
     }
 
+    if (password !== confirmPassword) return alert('Mật khẩu không khớp!');
+
     const btn = e.target.querySelector('button');
-    btn.innerText = "Đang xử lý...";
+    btn.innerText = "Đang xử lý..."; 
     btn.disabled = true;
 
     try {
-        // Gọi API Register (Dùng fetch trực tiếp để tránh gửi Header Token cũ nếu có)
-        const response = await fetch(`${API_URL}/auth/register`, {
+        const res = await fetch(`${API_URL}/auth/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password, fullName })
+            // Gửi đúng 4 trường mà Back-end yêu cầu
+            body: JSON.stringify({ username, fullName, email, password }) 
         });
 
-        if (response.ok) {
+        if (res.ok) {
             alert('✅ Đăng ký thành công! Vui lòng đăng nhập.');
-            // Chuyển về màn hình đăng nhập và điền sẵn username
-            document.getElementById('toggleAuth').click();
+            
+            // Tự động điền user mới vào form đăng nhập cho tiện
+            showLogin();
             document.getElementById('username').value = username;
             document.getElementById('password').focus();
         } else {
-            // Đọc lỗi từ Server trả về (ví dụ: Tên đã tồn tại)
-            const errorData = await response.json(); 
-            alert('❌ Đăng ký thất bại: ' + (errorData.message || 'Lỗi không xác định'));
+            const err = await res.json();
+            alert('❌ ' + (err.message || 'Lỗi đăng ký'));
         }
-    } catch (error) {
-        alert('❌ Lỗi kết nối đến Server: ' + error.message);
-    } finally {
-        btn.innerText = "Đăng ký";
-        btn.disabled = false;
+    } catch (error) { 
+        alert('Lỗi kết nối Server'); 
+    } finally { 
+        btn.innerText = "Đăng ký"; 
+        btn.disabled = false; 
     }
 });
     // Forgot Password Flow
-    document.getElementById('fpStep1').addEventListener('submit', function(e) {
+    // Biến tạm để lưu thông tin khi chuyển giữa các bước
+// --- BIẾN TOÀN CỤC CHO QUÊN MẬT KHẨU ---
+    let fpEmail = "";
+    let fpOtpCode = "";
+    
+
+    // --- BƯỚC 1: GỬI YÊU CẦU OTP ---
+    document.getElementById('fpStep1').addEventListener('submit', async function(e) {
         e.preventDefault();
-        const identity = document.getElementById('fpIdentity').value.trim();
-        // Mock check: assuming identity matches a username for this demo
-        const user = Object.values(users).find(u => u.username === identity);
-        if (!user) {
-            alert('⚠️ Tài khoản không tồn tại!');
-            return;
+        const emailInput = document.getElementById('fpIdentity').value.trim();
+        
+        const btn = e.target.querySelector('button');
+        btn.innerText = "Đang gửi Email..."; 
+        btn.disabled = true;
+        
+        try {
+            const res = await fetch(`${API_URL}/auth/forgot-password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: emailInput })
+            });
+
+            if (res.ok) {
+                fpEmail = emailInput; // Lưu lại email
+                alert('✅ Đã gửi mã OTP vào Email của bạn. Vui lòng kiểm tra hộp thư!');
+                document.getElementById('fpStep1').style.display = 'none';
+                document.getElementById('fpStep2').style.display = 'block';
+            } else {
+                const err = await res.json();
+                alert('❌ ' + (err.message || 'Lỗi gửi mail'));
+            }
+        } catch (error) { 
+            alert('Lỗi kết nối Server'); 
+        } finally { 
+            btn.innerText = "Gửi mã xác nhận"; 
+            btn.disabled = false; 
         }
-        fpCurrentIdentity = identity;
-        alert('Mã xác nhận của bạn là: 123456');
-        document.getElementById('fpStep1').style.display = 'none';
-        document.getElementById('fpStep2').style.display = 'block';
-        document.getElementById('fpOtp').value = '';
     });
 
+    // --- BƯỚC 2: NHẬP OTP ---
     document.getElementById('fpStep2').addEventListener('submit', function(e) {
         e.preventDefault();
-        const otp = document.getElementById('fpOtp').value.trim();
-        if (otp !== '123456') {
-            alert('⚠️ Mã xác nhận không đúng!');
+        const otpInput = document.getElementById('fpOtp').value.trim();
+        
+        if (otpInput.length < 6) {
+            alert("⚠️ Mã OTP phải có ít nhất 6 ký tự!");
             return;
         }
+
+        fpOtpCode = otpInput; // Lưu lại OTP
         document.getElementById('fpStep2').style.display = 'none';
         document.getElementById('fpStep3').style.display = 'block';
     });
+
+    // --- BƯỚC 3: ĐỔI MẬT KHẨU MỚI ---
+    document.getElementById('fpStep3').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const newPass = document.getElementById('fpNewPass').value;
+        const confirmPass = document.getElementById('fpConfirmPass').value; // Lấy ô xác nhận
+        
+        // 1. Kiểm tra khớp mật khẩu
+        if (newPass.length < 6) return alert("⚠️ Mật khẩu phải có ít nhất 6 ký tự!");
+        if (newPass !== confirmPass) return alert("⚠️ Mật khẩu xác nhận không khớp!");
+
+        // 2. Khóa nút bấm
+        const btn = e.target.querySelector('button');
+        const oldText = btn.innerText;
+        btn.innerText = "Đang đổi mật khẩu...";
+        btn.disabled = true;
+        
+        try {
+            const res = await fetch(`${API_URL}/auth/reset-password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    email: fpEmail, 
+                    otp: fpOtpCode, 
+                    newPassword: newPass 
+                })
+            });
+
+            if (res.ok) {
+                alert('✅ Đổi mật khẩu thành công! Vui lòng đăng nhập lại.');
+                
+                // Reset form và chuyển về Login
+                document.getElementById('fpStep1').reset();
+                document.getElementById('fpStep2').reset();
+                document.getElementById('fpStep3').reset();
+                showLogin(); 
+            } else {
+                const err = await res.json();
+                alert('❌ ' + (err.message || 'Lỗi đổi mật khẩu'));
+            }
+        } catch (error) { 
+            alert('Lỗi kết nối Server'); 
+        } finally {
+            btn.innerText = oldText;
+            btn.disabled = false;
+        }
+    });
+  
+
+    // --- BƯỚC 2: NHẬP OTP (CODE CHUẨN) ---
+document.getElementById('fpStep2').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const otpInput = document.getElementById('fpOtp').value.trim();
+    
+    // 1. Chỉ kiểm tra độ dài (Validation cơ bản)
+    if (otpInput.length < 6) {
+        alert("⚠️ Mã OTP phải có ít nhất 6 ký tự!");
+        return; 
+    }
+    fpOtpCode = otpInput; 
+    
+    // 3. Chuyển sang bước 3 (Nhập mật khẩu mới)
+    document.getElementById('fpStep2').style.display = 'none';
+    document.getElementById('fpStep3').style.display = 'block';
+});
 
     document.getElementById('fpStep3').addEventListener('submit', function(e) {
         e.preventDefault();
@@ -1440,27 +1549,39 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
         }
     });
 
-    function logout() {
-        currentUser = null;
-        localStorage.removeItem('currentUser');
-        document.getElementById('loginPage').style.display = 'flex';
-        document.getElementById('appPage').classList.remove('active');
-        showLogin();
-    }
+ function logout() {
+    currentUser = null;
+    token = null;
+    orders = []; // <--- QUAN TRỌNG: Xóa sạch danh sách đơn hàng trong Ram
+    
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('token');
+    
+    // Render lại giao diện rỗng để chắc chắn không còn gì hiện lên
+    document.getElementById('ordersContainer').innerHTML = ''; 
+    document.getElementById('totalOrders').textContent = '0';
+
+    document.getElementById('loginPage').style.display = 'flex';
+    document.getElementById('appPage').classList.remove('active');
+    
+    showLogin();
+}
 
     function showApp() {
-        document.getElementById('loginPage').style.display = 'none';
-        document.getElementById('appPage').classList.add('active');
-        document.getElementById('userName').textContent = currentUser.fullName;
-        if (currentUser.role === 'user') {
-            document.getElementById('revenueLabel').textContent = 'Tổng chi tiêu';
-        } else {
-            document.getElementById('revenueLabel').textContent = 'Doanh thu';
-        }
-        loadProducts();
-        updateStats();
-        renderOrders();
-    }
+    document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('appPage').classList.add('active');
+    
+    const userNameEl = document.getElementById('userName');
+    if (userNameEl) userNameEl.textContent = currentUser.fullName;
+
+    
+    const roleText = (currentUser.role === 'Admin') ? 'Quản trị viên' : 'Người dùng';
+    document.getElementById('userRole').textContent = roleText;
+    
+    loadProducts();
+    updateStats();
+    renderOrders();
+}
 
     async function loadProducts() {
     const select = document.getElementById('productSelect');
@@ -1597,13 +1718,13 @@ async function updateStats() {
         return texts[status] || status;
     }
 
-    function getOrderActions(order) {
+   function getOrderActions(order) {
     if (!currentUser) return '';
     
     let actions = '';
     const status = order.status.toLowerCase();
 
-    // Quyền ADMIN
+    // TRƯỜNG HỢP 1: NẾU LÀ ADMIN (Quyền lực tối thượng)
     if (currentUser.role === 'Admin') {
         if (status === 'pending') {
             actions += `<button class="btn-action btn-process" onclick="updateOrderStatus(${order.id}, 'processing')">Duyệt đơn</button>`;
@@ -1612,14 +1733,17 @@ async function updateStats() {
             actions += `<button class="btn-action btn-complete" onclick="updateOrderStatus(${order.id}, 'completed')">Hoàn thành</button>`;
             actions += `<button class="btn-action btn-cancel" onclick="updateOrderStatus(${order.id}, 'cancelled')">Hủy</button>`;
         }
-        // Nút xóa luôn hiện với Admin
         actions += `<button class="btn-action btn-delete" onclick="deleteOrder(${order.id})">🗑️ Xóa</button>`;
     } 
-    // Quyền USER (Khách hàng)
+    // TRƯỜNG HỢP 2: NẾU LÀ USER (KHÁCH HÀNG)
     else {
-        // Khách chỉ được hủy khi đơn còn đang chờ
-        if (status === 'pending') {
-            actions += `<button class="btn-action btn-cancel" onclick="updateOrderStatus(${order.id}, 'cancelled')">Hủy đơn hàng</button>`;
+        // Kiểm tra xem đơn này có phải của mình không (dù API get đã lọc, nhưng check lại cho chắc)
+        // Lưu ý: order.userId (API trả về) so với currentUser.id
+        if (order.userId === currentUser.id) {
+            // Khách chỉ được hủy khi đơn còn đang 'pending'
+            if (status === 'pending') {
+                actions += `<button class="btn-action btn-cancel" onclick="updateOrderStatus(${order.id}, 'cancelled')">Hủy đơn hàng</button>`;
+            }
         }
     }
     return actions;
@@ -1771,53 +1895,137 @@ async function updateStats() {
 }
 
     // Profile Logic
-    function openProfileModal() {
-        document.getElementById('profileModal').classList.add('active');
-        document.getElementById('profileUsername').value = currentUser.username;
-        document.getElementById('profileRole').value = currentUser.role === 'admin' ? 'Quản trị viên' : 'Khách hàng';
-        document.getElementById('profileFullName').value = currentUser.fullName;
-        document.getElementById('profileDob').value = currentUser.dob || '';
-        ['currentPassword', 'newPassword', 'confirmNewPassword'].forEach(id => document.getElementById(id).value = '');
+    async function openProfileModal() {
+    document.getElementById('profileModal').classList.add('active');
+    
+    // Xóa trắng các ô mật khẩu mỗi khi mở lại
+    document.getElementById('currentPassword').value = '';
+    document.getElementById('newPassword').value = '';
+    document.getElementById('confirmNewPassword').value = '';
 
-        // Admin only user management
-        if (currentUser.role === 'admin') {
-            document.getElementById('adminSection').style.display = 'block';
-            renderUserList();
-        } else {
-            document.getElementById('adminSection').style.display = 'none';
+    try {
+        // Gọi API lấy thông tin mới nhất
+        const data = await fetchAPI('users/profile');
+        
+        if (data) {
+            document.getElementById('profileUsername').value = data.username;
+            document.getElementById('profileRole').value = data.role === 'Admin' ? 'Quản trị viên' : 'Khách hàng';
+            document.getElementById('profileFullName').value = data.fullName;
+            document.getElementById('profileEmail').value = data.email;
+
+            // Nếu là Admin thì tải danh sách user
+            if (data.role === 'Admin') {
+                document.getElementById('adminSection').style.display = 'block';
+                loadUserList();
+            } else {
+                document.getElementById('adminSection').style.display = 'none';
+            }
         }
-    }
+    } catch (error) { alert('Lỗi tải thông tin cá nhân'); }
+}
 
-    function closeProfileModal() {
-        document.getElementById('profileModal').classList.remove('active');
-    }
+function closeProfileModal() {
+    document.getElementById('profileModal').classList.remove('active');
+}
 
-    function renderUserList() {
-        const container = document.getElementById('userList');
-        container.innerHTML = Object.values(users).map(u => `
+// 2. Xử lý Lưu thay đổi (Submit Form)
+document.getElementById('profileForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    // --- PHẦN 1: CẬP NHẬT THÔNG TIN CƠ BẢN ---
+    const infoPayload = {
+        fullName: document.getElementById('profileFullName').value.trim(),
+        email: document.getElementById('profileEmail').value.trim()
+    };
+
+    try {
+        const resInfo = await fetchAPI('users/profile', 'PUT', infoPayload);
+        if (!resInfo) return; // Lỗi thì dừng
+
+        let message = '✅ ' + resInfo.message;
+
+        // --- PHẦN 2: ĐỔI MẬT KHẨU (NẾU CÓ NHẬP) ---
+        const currentPass = document.getElementById('currentPassword').value;
+        const newPass = document.getElementById('newPassword').value;
+        const confirmPass = document.getElementById('confirmNewPassword').value;
+
+        // Chỉ xử lý nếu người dùng có nhập mật khẩu
+        if (currentPass || newPass || confirmPass) {
+            if (!currentPass || !newPass) {
+                return alert('⚠️ Để đổi mật khẩu, vui lòng nhập mật khẩu hiện tại và mới!');
+            }
+            if (newPass.length < 6) {
+                return alert('⚠️ Mật khẩu mới phải có ít nhất 6 ký tự');
+            }
+            if (newPass !== confirmPass) {
+                return alert('⚠️ Mật khẩu xác nhận không khớp');
+            }
+
+            const passPayload = { currentPassword: currentPass, newPassword: newPass };
+            const resPass = await fetchAPI('users/change-password', 'PUT', passPayload);
+            
+            if (resPass) {
+                message += '\n✅ Đổi mật khẩu thành công!';
+            } else {
+                // Nếu đổi pass lỗi thì thông báo và chưa đóng modal vội
+                return alert('❌ Đổi mật khẩu thất bại: ' + (resPass?.message || 'Lỗi server'));
+            }
+        }
+
+        // Nếu mọi thứ ok
+        alert(message);
+        closeProfileModal();
+        
+        // Cập nhật lại thông tin hiển thị bên ngoài (Header)
+        if(resInfo.user) {
+            currentUser = resInfo.user;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            showApp(); 
+        }
+
+    } catch (error) {
+        alert('Có lỗi xảy ra: ' + error.message);
+    }
+});
+
+// 3. (Admin) Tải danh sách User
+async function loadUserList() {
+    const container = document.getElementById('userList');
+    container.innerHTML = '<p>Đang tải danh sách...</p>';
+    
+    const users = await fetchAPI('users'); 
+    if (!users) return;
+
+    if (users.length === 0) container.innerHTML = '<p>Không có user nào</p>';
+    else {
+        container.innerHTML = users.map(u => `
             <div class="user-list-item">
                 <div>
-                    <strong>${u.username}</strong> - ${u.fullName}
+                    <strong>${u.username}</strong> - ${u.fullName} <br>
+                    <small style="color: #666;">${u.email} (${u.role})</small>
                 </div>
-                ${u.username !== currentUser.username ? `
-                    <button type="button" onclick="toggleRole('${u.username}')" class="filter-btn" style="font-size: 12px; padding: 5px 10px;">
-                        ${u.role === 'admin' ? 'Giáng xuống User' : 'Thăng lên Admin'}
+                ${u.username !== currentUser.username && u.username !== 'admin' ? `
+                    <button type="button" onclick="toggleUserRole(${u.id})" class="filter-btn" style="font-size: 12px; padding: 5px 10px;">
+                        ${u.role === 'Admin' ? 'Giáng xuống User' : 'Thăng lên Admin'}
                     </button>
-                ` : '<span style="font-size: 12px; color: #999;">(Bạn)</span>'}
+                ` : '<span style="font-size: 12px; color: #999; font-style: italic;">(Không thể sửa)</span>'}
             </div>
         `).join('');
     }
+}
 
-    function toggleRole(username) {
-        if (users[username]) {
-            users[username].role = users[username].role === 'admin' ? 'user' : 'admin';
-            saveUsers();
-            renderUserList();
-            alert(`Đã đổi vai trò của ${username} thành ${users[username].role}`);
-        }
+// 4. (Admin) Đổi quyền User
+async function toggleUserRole(userId) {
+    if(!confirm('Bạn có chắc muốn thay đổi quyền của người dùng này?')) return;
+    
+    const res = await fetchAPI(`users/${userId}/role`, 'PUT');
+    if (res) {
+        alert(res.message);
+        loadUserList(); // Tải lại danh sách ngay
     }
-
-    window.toggleRole = toggleRole; // Expose to window for onclick
+}
+// Expose hàm ra global để HTML gọi được onclick
+window.toggleUserRole = toggleUserRole;
 
     document.getElementById('profileForm').addEventListener('submit', function(e) {
         e.preventDefault();

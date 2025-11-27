@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OrderManagementAPI.Entity;
 
@@ -11,9 +12,11 @@ using OrderManagementAPI.Entity;
 namespace OrderManagementAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251126152341_AddUserEmail")]
+    partial class AddUserEmail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -200,9 +203,9 @@ namespace OrderManagementAPI.Migrations
                         new
                         {
                             Id = 1,
-                            Email = "admin@gmail.com",
-                            FullName = "Quản Trị Viên",
-                            PasswordHash = "$2a$11$XQ3JmtZFtKX/tvONNilvEeF0JRxQThh273bhNHqNzHiQV/kOLdvmW",
+                            Email = "",
+                            FullName = "Administrator",
+                            PasswordHash = "$2a$11$aoQDdIiTLOtzd1zTG/uI4ugDflE15izJrihyhl7A4IGf3N/rBq5MS",
                             Role = "Admin",
                             Username = "admin"
                         });

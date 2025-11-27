@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OrderManagementAPI.Entity;
 
@@ -11,9 +12,11 @@ using OrderManagementAPI.Entity;
 namespace OrderManagementAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251126151024_AddResetToken")]
+    partial class AddResetToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -166,10 +169,6 @@ namespace OrderManagementAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -200,9 +199,8 @@ namespace OrderManagementAPI.Migrations
                         new
                         {
                             Id = 1,
-                            Email = "admin@gmail.com",
-                            FullName = "Quản Trị Viên",
-                            PasswordHash = "$2a$11$XQ3JmtZFtKX/tvONNilvEeF0JRxQThh273bhNHqNzHiQV/kOLdvmW",
+                            FullName = "Administrator",
+                            PasswordHash = "$2a$11$j2BZYEzJQo1NTtHTfRTC..iOujTWF4A80wuq89vQuWh2IXY0nvTU6",
                             Role = "Admin",
                             Username = "admin"
                         });

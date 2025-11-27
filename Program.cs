@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using OrderManagementAPI.Entity; // <-- Để Program biết AppDbContext ở đâu
 using System.Text.Json.Serialization;
+using OrderManagementAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,7 +42,7 @@ builder.Services.AddControllers()
     .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddTransient<IEmailService, EmailService>();
 var app = builder.Build();
 
 // Auto create DB
