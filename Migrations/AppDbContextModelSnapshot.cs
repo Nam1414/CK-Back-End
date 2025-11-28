@@ -205,7 +205,7 @@ namespace OrderManagementAPI.Migrations
                             Id = 1,
                             Email = "admin@gmail.com",
                             FullName = "Quản Trị Viên",
-                            PasswordHash = "$2a$11$1nrLbVJI0KraApfAP8V.3uuVOWliLiOPy1DltKaCgQV8tlzJT6YJe",
+                            PasswordHash = "$2a$11$0a7aM1zF9biqhBugLM53KuSWUPLdRd9EFt18.IxUbfgpcT05sZiEq",
                             Role = "Admin",
                             Username = "admin"
                         });
