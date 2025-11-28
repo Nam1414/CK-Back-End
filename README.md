@@ -10,25 +10,25 @@
 
 ## MỤC LỤC
 
-1.  GIỚI THIỆU CHUNG VÀ KIẾN TRÚC HỆ THỐNG
-2.  PHẦN 1: FRONTEND (CLIENT-SIDE)
+### 1.  GIỚI THIỆU CHUNG VÀ KIẾN TRÚC HỆ THỐNG
+### 2.  PHẦN 1: FRONTEND (CLIENT-SIDE)
     *   Triết lý thiết kế Zero Dependencies
     *   Phân tích kỹ thuật chi tiết
     *   Cấu trúc và Luồng dữ liệu Frontend
     *   Trải nghiệm người dùng (UX) và Giao diện (UI)
-3.  PHẦN 2: BACKEND (SERVER-SIDE)
+### 3.  PHẦN 2: BACKEND (SERVER-SIDE)
     *   Công nghệ cốt lõi và Nền tảng
     *   Phân tích Cấu trúc thư mục OrderManagementAPI
     *   Chi tiết triển khai các lớp (Layers)
     *   Cơ chế Bảo mật và Xác thực (Security & Auth)
     *   Cơ sở dữ liệu và Entity Framework Core
-4.  HƯỚNG DẪN CÀI ĐẶT VÀ TRIỂN KHAI
+### 4.  HƯỚNG DẪN CÀI ĐẶT VÀ TRIỂN KHAI
     *   Yêu cầu môi trường
     *   Thiết lập Backend
     *   Thiết lập Frontend
     *   Kết nối hệ thống
-5.  API DOCUMENTATION (TÀI LIỆU KỸ THUẬT API)
-6.  LỘ TRÌNH PHÁT TRIỂN VÀ BẢO TRÌ
+### 5.  API DOCUMENTATION (TÀI LIỆU KỸ THUẬT API)
+### 6.  LỘ TRÌNH PHÁT TRIỂN VÀ BẢO TRÌ
 
 ---
 
