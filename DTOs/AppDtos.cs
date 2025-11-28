@@ -10,12 +10,15 @@ namespace OrderManagementAPI.DTOs
         [Required] string Username, 
         [Required] string Password, 
         [Required] string FullName,
-        [Required, EmailAddress] string Email // <--- Đã thêm trường Email
+        [Required, EmailAddress] string Email, 
+        string? PhoneNumber
     );
     // 1. DTO Cập nhật thông tin (Chỉ còn Tên và Email)
     public record UpdateProfileDto(
         [Required] string FullName,
-        [Required, EmailAddress] string Email
+        [Required, EmailAddress] string Email,
+        string? PhoneNumber
+        
     );
 
     // 2. DTO Đổi mật khẩu
@@ -30,10 +33,10 @@ namespace OrderManagementAPI.DTOs
     public record AuthResponseDto(string Token, string Username, string FullName, string Role);
 
     // DTO cho quên mật khẩu (Tìm bằng Email)
-    public record ForgotPasswordDto([Required, EmailAddress] string Email);
+   public record ForgotPasswordDto([Required] string Identity);
 
     // DTO cho đặt lại mật khẩu (Xác định user bằng Email)
-    public record ResetPasswordDto(string Email, string Otp, string NewPassword);
+   public record ResetPasswordDto(string Identity, string Otp, string NewPassword);
 
 
     // --- NHÓM SẢN PHẨM & ĐƠN HÀNG ---

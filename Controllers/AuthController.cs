@@ -68,7 +68,8 @@ namespace OrderManagementAPI.Controllers
                 Email = dto.Email,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
                 FullName = dto.FullName,
-                Role = "User"
+                Role = "User",
+                PhoneNumber = dto.PhoneNumber
             };
 
             _context.Users.Add(user);
@@ -80,42 +81,67 @@ namespace OrderManagementAPI.Controllers
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
-            if (user == null) return BadRequest(new { message = "Email không tồn tại" });
+            // Tìm User trong DB (So khớp cả cột Email và cột PhoneNumber)
+            var user = await _context.Users.FirstOrDefaultAsync(u => 
+                u.Email == dto.Identity || u.PhoneNumber == dto.Identity);
 
+            if (user == null) return BadRequest(new { message = "Thông tin không tồn tại trong hệ thống" });
+
+            // Tạo OTP
             var otp = Random.Shared.Next(100000, 999999).ToString();
             user.ResetToken = otp;
             user.ResetTokenExpiry = DateTime.Now.AddMinutes(5);
             await _context.SaveChangesAsync();
 
-            // Gửi Email
-            try 
-            {
-                string subject = "Mã xác nhận Quên mật khẩu";
-                string body = $@"
-                    <h3>Xin chào {user.FullName},</h3>
-                    <p>Bạn vừa yêu cầu đặt lại mật khẩu.</p>
-                    <p>Mã OTP của bạn là: <b style='font-size: 20px; color: blue;'>{otp}</b></p>
-                    <p>Mã này có hiệu lực trong 5 phút.</p>";
+            // Kiểm tra xem người dùng nhập Email hay SĐT (dựa vào ký tự @)
+            bool isEmail = dto.Identity.Contains("@");
 
-                await _emailService.SendEmailAsync(user.Email, subject, body);
-            }
-            catch(Exception ex)
+            if (isEmail)
             {
-                return BadRequest(new { message = "Lỗi gửi mail: " + ex.Message });
+                // === TRƯỜNG HỢP EMAIL: Gửi mail thật ===
+                try 
+                {
+                    string subject = "Mã xác nhận Quên mật khẩu";
+                    string body = $@"
+                        <h3>Xin chào {user.FullName},</h3>
+                        <p>Mã OTP của bạn là: <b style='color:red; font-size:20px;'>{otp}</b></p>
+                        <p>Mã này hết hạn sau 5 phút.</p>";
+                    
+                    // Gọi Service gửi mail (Đã cấu hình Gmail App Password)
+                    await _emailService.SendEmailAsync(user.Email, subject, body);
+                    
+                    return Ok(new { message = "Mã OTP đã được gửi vào Email của bạn." });
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(new { message = "Lỗi gửi mail: " + ex.Message });
+                }
             }
+            else
+            {
+                // === TRƯỜNG HỢP SỐ ĐIỆN THOẠI: In ra Terminal (Giả lập SMS) ===
+                Console.WriteLine("========================================");
+                Console.WriteLine($"[SMS GATEWAY] Đang gửi tin nhắn tới số: {user.PhoneNumber}");
+                Console.WriteLine($"[NỘI DUNG SMS] Mã xác nhận của bạn là: {otp}");
+                Console.WriteLine("========================================");
 
-            return Ok(new { message = "Đã gửi mã OTP vào Email của bạn." });
+                return Ok(new { message = "Mã OTP đã được gửi qua SMS (Vui lòng xem Terminal để lấy mã)" });
+            }
         }
 
+        // 4. ĐẶT LẠI MẬT KHẨU (Sửa lại để tìm theo Identity)
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
-            if (user == null) return BadRequest(new { message = "User không tồn tại" });
+            // Tìm user theo Email hoặc Phone
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Identity || u.PhoneNumber == dto.Identity);
+            
+            if (user == null) return BadRequest(new { message = "Tài khoản không tồn tại" });
 
             if (user.ResetToken != dto.Otp || user.ResetTokenExpiry < DateTime.Now)
-                return BadRequest(new { message = "Mã OTP sai hoặc hết hạn" });
+            {
+                return BadRequest(new { message = "Mã OTP sai hoặc đã hết hạn" });
+            }
 
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
             user.ResetToken = null;

@@ -29,7 +29,8 @@ namespace OrderManagementAPI.Controllers
 
             return Ok(new 
             { 
-                user.Id, user.Username, user.FullName, user.Email, user.Role 
+                user.Id, user.Username, user.FullName, user.Email, user.Role ,
+                user.PhoneNumber
             });
         }
 
@@ -49,6 +50,7 @@ namespace OrderManagementAPI.Controllers
 
             user.FullName = dto.FullName;
             user.Email = dto.Email;
+            user.PhoneNumber = dto.PhoneNumber;
 
             await _context.SaveChangesAsync();
             
