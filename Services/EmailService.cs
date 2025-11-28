@@ -12,9 +12,10 @@ namespace OrderManagementAPI.Services
             _config = config;
         }
 
+        /// Gửi email bất đồng bộ
         public async Task SendEmailAsync(string toEmail, string subject, string message)
         {
-            var emailSettings = _config.GetSection("EmailSettings");
+            var emailSettings = _config.GetSection("EmailSettings");// Lấy cấu hình email từ appsettings.json
 
             var mail = "smtp.gmail.com";
             var port = 587;
@@ -28,15 +29,15 @@ namespace OrderManagementAPI.Services
                 Credentials = new NetworkCredential(senderEmail, password)
             };
 
-            var mailMessage = new MailMessage
+            var mailMessage = new MailMessage 
             {
                 From = new MailAddress(senderEmail!, senderName),
-                Subject = subject,
-                Body = message,
+                Subject = subject, 
+                Body = message, 
                 IsBodyHtml = true // Cho phép gửi HTML đẹp
             };
 
-            mailMessage.To.Add(toEmail);
+            mailMessage.To.Add(toEmail);// Thêm người nhận
 
             await client.SendMailAsync(mailMessage);
         }

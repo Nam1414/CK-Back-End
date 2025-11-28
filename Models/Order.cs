@@ -6,7 +6,7 @@ public class Order
     public string CustomerPhone { get; set; } = string.Empty;
     public string CustomerAddress { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.Now;
-    public string Status { get; set; } = "pending";
+    public string Status { get; set; } = "pending";// Trạng thái đơn hàng
     public decimal TotalAmount { get; set; }
     public List<OrderDetail> OrderDetails { get; set; } = new();
 }

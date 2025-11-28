@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;// <--- Quan trọng: Dòng này để dùng [Required], [EmailAddress], etc.
 
 public class User
 {

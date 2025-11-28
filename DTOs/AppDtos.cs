@@ -2,11 +2,14 @@ using System.ComponentModel.DataAnnotations; // <--- Quan trọng: Dòng này s�
 
 namespace OrderManagementAPI.DTOs
 {
-    // --- NHÓM AUTH (Đăng nhập/Đăng ký/Quên mật khẩu) ---
-    
-    public record LoginDto(string Username, string Password);
+    // --- NHÓM AUTH (Đăng nhập/Đăng ký/Quên mật khẩu) ---    
+    public record LoginDto
+    (
+        string Username, string Password
+    );
 
-    public record RegisterDto(
+    public record RegisterDto
+    (
         [Required] string Username, 
         [Required] string Password, 
         [Required] string FullName,
@@ -41,16 +44,21 @@ namespace OrderManagementAPI.DTOs
 
     // --- NHÓM SẢN PHẨM & ĐƠN HÀNG ---
 
-    public record ProductCreateDto(
+    public record ProductCreateDto
+    (
         [Required] string Name, 
         [Range(0, double.MaxValue)] decimal Price, 
         int Stock,
         string Description
     );
 
-    public record OrderItemDto(int ProductId, int Quantity);
+    public record OrderItemDto
+    (
+        int ProductId, int Quantity
+    );
 
-    public record CreateOrderDto(
+    public record CreateOrderDto
+    (
         string CustomerName, 
         string CustomerPhone, 
         string CustomerAddress, 

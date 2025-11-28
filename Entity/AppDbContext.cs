@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-// using OrderManagementAPI.Models; // Bỏ comment dòng này nếu file User.cs nằm trong thư mục Models
 
 namespace OrderManagementAPI.Entity
 {
