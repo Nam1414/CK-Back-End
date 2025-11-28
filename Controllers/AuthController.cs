@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using OrderManagementAPI.Data;
+using OrderManagementAPI.Entity;
 using OrderManagementAPI.Models;
 using OrderManagementAPI.Services;
 using OrderManagementAPI.Helpers;
