@@ -285,4 +285,5 @@ Dự án này được thiết kế với tầm nhìn dài hạn. Các tính nă
 ---
 
 **Made with love by Quỳnh Anh**
+---
 *Tài liệu này được cập nhật lần cuối: November 26, 2025*
