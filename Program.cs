@@ -2,9 +2,10 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using ProductAPI.Data;
-using ProductAPI.Services;
-using ProductAPI.Middlewares;
+using OrderManagementAPI.Data;
+using OrderManagementAPI.Services;
+using OrderManagementAPI.Middlewares;
+
 
 var builder = WebApplication.CreateBuilder(args);
 

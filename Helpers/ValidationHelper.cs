@@ -1,7 +1,8 @@
-using ProductAPI.Models;
+using OrderManagementAPI.Models;
 using System.Linq;
 
-namespace ProductAPI.Helpers
+namespace OrderManagementAPI.Helpers
+
 {
     public static class ValidationHelper
     {

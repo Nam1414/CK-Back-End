@@ -3,7 +3,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace ProductAPI.Services
+namespace OrderManagementAPI.Services
+
 {
     public class JwtService
     {

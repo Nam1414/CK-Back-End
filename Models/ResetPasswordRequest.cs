@@ -1,4 +1,5 @@
-namespace ProductAPI.Models
+namespace OrderManagementAPI.Models
+
 {
     public class ResetPasswordRequest
     {

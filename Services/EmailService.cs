@@ -2,7 +2,8 @@ using System.Net;
 using System.Net.Mail;
 using Microsoft.Extensions.Configuration;
 
-namespace ProductAPI.Services
+namespace OrderManagementAPI.Services
+
 {
     public class EmailService : IEmailService
     {

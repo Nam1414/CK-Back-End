@@ -1,4 +1,5 @@
-namespace ProductAPI.Services   
+namespace OrderManagementAPI.Services
+
 {
     public interface IEmailService
     {

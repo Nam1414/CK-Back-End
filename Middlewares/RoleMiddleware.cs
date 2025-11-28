@@ -1,6 +1,6 @@
 using System.Security.Claims;
 
-namespace ProductAPI.Middlewares
+namespace OrderManagementAPI.Middlewares
 {
     public class RoleMiddleware
     {

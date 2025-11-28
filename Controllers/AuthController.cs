@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ProductAPI.Data;
-using ProductAPI.Models;
-using ProductAPI.Services;
-using ProductAPI.Helpers;
+using OrderManagementAPI.Data;
+using OrderManagementAPI.Models;
+using OrderManagementAPI.Services;
+using OrderManagementAPI.Helpers;
 
-namespace ProductAPI.Controllers
+namespace OrderManagementAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

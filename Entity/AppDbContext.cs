@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using ProductAPI.Models;
+using OrderManagementAPI.Models;
 
-namespace ProductAPI.Data
+namespace OrderManagementAPI.Data
 {
     public class AppDbContext : DbContext
     {
