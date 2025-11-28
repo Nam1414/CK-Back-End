@@ -47,27 +47,16 @@ namespace ProductAPI.Helpers
             if (!r.Email.Contains("@")) 
                 return "Email không đúng định dạng";
 
-            if (string.IsNullOrWhiteSpace(r.PhoneNumber)) 
-                return "SĐT không được để trống";
-
-            if (!r.PhoneNumber.All(char.IsDigit)) 
-                return "SĐT chỉ được chứa số";
-
             return null;
         }
 
         // RESET PASSWORD
         public static string? ValidateReset(ResetPasswordRequest r)
         {
-            if (string.IsNullOrWhiteSpace(r.Token)) 
-                return "Token không hợp lệ";
-
-            if (string.IsNullOrWhiteSpace(r.NewPassword)) 
-                return "Mật khẩu mới không được để trống";
-
-            if (r.NewPassword.Length < 6) 
-                return "Mật khẩu tối thiểu 6 ký tự";
-
+            if (string.IsNullOrWhiteSpace(r.Email)) return "Email không được để trống";
+            if (string.IsNullOrWhiteSpace(r.Otp)) return "OTP không hợp lệ";
+            if (string.IsNullOrWhiteSpace(r.NewPassword)) return "Mật khẩu mới không được để trống";
+            if (r.NewPassword.Length < 6) return "Mật khẩu tối thiểu 6 ký tự";
             return null;
         }
     }

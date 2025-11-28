@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ProductAPI.Data;
 using ProductAPI.Services;
+using ProductAPI.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,7 @@ builder.Services.AddSwaggerGen();
 
 // JWT SERVICE (DI)
 builder.Services.AddScoped<JwtService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 // JWT AUTHENTICATION
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

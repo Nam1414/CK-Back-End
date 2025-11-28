@@ -1,29 +1,29 @@
 using System.Security.Claims;
 
-public class RoleMiddleware
+namespace ProductAPI.Middlewares
 {
-    private readonly RequestDelegate _next;
-
-    public RoleMiddleware(RequestDelegate next)
+    public class RoleMiddleware
     {
-        _next = next;
-    }
+        private readonly RequestDelegate _next;
 
-    public async Task Invoke(HttpContext context)
-    {
-        var path = context.Request.Path.Value?.ToLower();
-        var method = context.Request.Method;
-
-        var role = context.User.FindFirst(ClaimTypes.Role)?.Value;
-
-        // Ví dụ: chặn DELETE bất kỳ nếu không phải Admin
-        if (method == "DELETE" && role != "Admin")
+        public RoleMiddleware(RequestDelegate next)
         {
-            context.Response.StatusCode = StatusCodes.Status403Forbidden;
-            await context.Response.WriteAsync("Chỉ Admin mới được phép xóa");
-            return;
+            _next = next;
         }
 
-        await _next(context);
+        public async Task Invoke(HttpContext context)
+        {
+            var role = context.User.FindFirst(ClaimTypes.Role)?.Value;
+
+            // Ví dụ: chặn DELETE nếu không phải Admin
+            if (context.Request.Method == "DELETE" && role != "Admin")
+            {
+                context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                await context.Response.WriteAsync("Chỉ Admin mới được phép xóa");
+                return;
+            }
+
+            await _next(context);
+        }
     }
 }

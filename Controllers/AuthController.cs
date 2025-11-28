@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ProductAPI.Models;
 using ProductAPI.Data;
+using ProductAPI.Models;
 using ProductAPI.Services;
 using ProductAPI.Helpers;
 
@@ -13,11 +13,13 @@ namespace ProductAPI.Controllers
     {
         private readonly AppDbContext _context;
         private readonly JwtService _jwtService;
+        private readonly IEmailService _emailService;
 
-        public AuthController(AppDbContext context, JwtService jwtService)
+        public AuthController(AppDbContext context, JwtService jwtService, IEmailService emailService)
         {
             _context = context;
             _jwtService = jwtService;
+            _emailService = emailService;
         }
 
         // LOGIN
@@ -27,11 +29,8 @@ namespace ProductAPI.Controllers
             var err = ValidationHelper.ValidateLogin(request);
             if (err != null) return BadRequest(err);
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Username == request.Username);
-
-            if (user == null)
-                return Unauthorized("Tài khoản không tồn tại");
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
+            if (user == null) return Unauthorized("Tài khoản không tồn tại");
 
             if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
                 return Unauthorized("Sai mật khẩu");
@@ -56,12 +55,14 @@ namespace ProductAPI.Controllers
             if (await _context.Users.AnyAsync(x => x.Username == req.Username))
                 return BadRequest("Username đã tồn tại");
 
+            if (await _context.Users.AnyAsync(x => x.Email == req.Email))
+                return BadRequest("Email đã được sử dụng");
+
             var user = new User
             {
                 Username = req.Username,
                 FullName = req.FullName,
-                //Email = req.Email,
-                //PhoneNumber = req.PhoneNumber,
+                Email = req.Email,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(req.Password),
                 Role = "User"
             };
@@ -72,48 +73,46 @@ namespace ProductAPI.Controllers
             return Ok(new { message = "Đăng ký thành công" });
         }
 
-        // FORGOT PASSWORD
+        // FORGOT PASSWORD → GỬI OTP EMAIL
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest req)
         {
             var err = ValidationHelper.ValidateForgot(req);
             if (err != null) return BadRequest(err);
 
-            var user = await _context.Users.FirstOrDefaultAsync(x =>
-                x.Email == req.Email && x.PhoneNumber == req.PhoneNumber
-            );
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == req.Email);
+            if (user == null) return BadRequest("Email không tồn tại");
 
-            if (user == null)
-                return NotFound("Email hoặc số điện thoại không đúng");
-
-            var token = Guid.NewGuid().ToString();
-            user.ResetToken = token;
-            user.ResetTokenExpire = DateTime.UtcNow.AddMinutes(10);
+            var otp = Random.Shared.Next(100000, 999999).ToString();
+            user.ResetToken = otp;
+            user.ResetTokenExpire = DateTime.UtcNow.AddMinutes(5);
 
             await _context.SaveChangesAsync();
 
-            return Ok(new
-            {
-                message = "Đã tạo mã reset",
-                token = token
-            });
+            var subject = "Mã OTP đặt lại mật khẩu";
+            var body = $@"
+                <h3>Xin chào {user.FullName}</h3>
+                <p>Mã OTP của bạn là:</p>
+                <h2 style='color:blue'>{otp}</h2>
+                <p>OTP có hiệu lực trong 5 phút.</p>";
+
+            await _emailService.SendEmailAsync(user.Email, subject, body);
+
+            return Ok(new { message = "Đã gửi OTP về email" });
         }
 
-        // RESET PASSWORD
+        // RESET PASSWORD (OTP)
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest req)
         {
             var err = ValidationHelper.ValidateReset(req);
             if (err != null) return BadRequest(err);
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(x => x.ResetToken == req.Token);
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == req.Email);
+            if (user == null) return BadRequest("Email không tồn tại");
 
-            if (user == null)
-                return BadRequest("Token không hợp lệ");
-
-            if (!user.ResetTokenExpire.HasValue || user.ResetTokenExpire < DateTime.UtcNow)
-                return BadRequest("Token đã hết hạn");
+            if (user.ResetToken != req.Otp || user.ResetTokenExpire < DateTime.UtcNow)
+                return BadRequest("OTP sai hoặc đã hết hạn");
 
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(req.NewPassword);
             user.ResetToken = null;
@@ -121,7 +120,7 @@ namespace ProductAPI.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Đặt lại mật khẩu thành công" });
+            return Ok(new { message = "Đổi mật khẩu thành công" });
         }
     }
 }
