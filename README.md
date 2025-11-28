@@ -182,4 +182,106 @@ Thay vào đó, hệ thống sử dụng DTO. File `AppDtos.cs` có thể chứa
     *   Hàm `OnModelCreating`: Dùng để Seed Data (tạo dữ liệu mẫu admin/product ban đầu) và định nghĩa các mối quan hệ phức tạp (ví dụ: Composite Key cho bảng trung gian).
 
 #### D. Services (Lớp dịch vụ)
-Để tuân thủ nguyên lý Single Respo29, 2025*
+Để tuân thủ nguyên lý Single Responsibility (Đơn nhiệm), các logic không liên quan trực tiếp đến HTTP hay Database được tách ra `Services`.
+*   **IEmailService.cs:** Interface định nghĩa hành vi gửi email.
+*   **EmailService.cs:** Implement chi tiết việc gửi mail dùng SMTP (Gmail, SendGrid...).
+Việc sử dụng Interface giúp dễ dàng thay đổi nhà cung cấp email sau này mà không cần sửa code trong Controller.
+
+### 3.4. Cơ chế Bảo mật và Xác thực (Security & Auth)
+
+Hệ thống sử dụng tiêu chuẩn công nghiệp **JWT (JSON Web Token)**.
+1.  **Login:** Client gửi thông tin đăng nhập.
+2.  **Token Generation:** Server xác thực, nếu đúng sẽ tạo ra một chuỗi mã hóa chứa các Claims (User ID, Role, Email) và thời gian hết hạn. Chuỗi này được ký (Sign) bằng một Secret Key nằm trong `appsettings.json`.
+3.  **Authorization:** Các request sau đó, Client gửi kèm Token này trong Header. Middleware của .NET sẽ giải mã Token để biết người dùng là ai và có quyền truy cập API hay không.
+
+### 3.5. Cơ sở dữ liệu và Entity Framework Core
+
+Dự án sử dụng chiến lược **Code-First Migration**:
+1.  Lập trình viên định nghĩa các Class trong C#.
+2.  Chạy lệnh `add-migration`.
+3.  EF Core sinh ra code SQL để tạo bảng.
+4.  Chạy lệnh `update-database` để áp dụng vào SQL Server.
+
+Chiến lược này giúp việc quản lý phiên bản Database (Versioning) trở nên dễ dàng như quản lý Source Code.
+
+---
+
+## 4. HƯỚNG DẪN CÀI ĐẶT VÀ TRIỂN KHAI
+
+### 4.1. Yêu cầu môi trường
+*   **Hệ điều hành:** Windows, macOS hoặc Linux.
+*   **SDK:** .NET SDK 8.0 trở lên.
+*   **Database Engine:** SQL Server (Developer/Express Edition) hoặc LocalDB.
+*   **IDE:** Visual Studio 2022 (khuyên dùng) hoặc VS Code + C# Dev Kit extension.
+
+### 4.2. Thiết lập Backend
+
+1.  **Clone Repository:**
+    Tải mã nguồn về máy tính của bạn.
+
+2.  **Cấu hình Database:**
+    Mở file `appsettings.json`. Tìm phần `ConnectionStrings` và thay đổi `DefaultConnection` phù hợp với máy chủ SQL của bạn.
+    Ví dụ: `"Server=.;Database=OrderManagementDb;Trusted_Connection=True;TrustServerCertificate=True;"`
+
+3.  **Khôi phục Packages:**
+    Mở Terminal tại thư mục `OrderManagementAPI` và chạy:
+    `dotnet restore`
+
+4.  **Khởi tạo Database:**
+    Thực thi lệnh Migration để tạo Database và các bảng:
+    `dotnet ef database update`
+    (Lưu ý: Bạn cần cài đặt công cụ EF Core CLI trước: `dotnet tool install --global dotnet-ef`)
+
+5.  **Chạy ứng dụng:**
+    `dotnet run`
+    Server sẽ khởi động tại `https://localhost:5001` hoặc `http://localhost:5000`.
+
+### 4.3. Thiết lập Frontend
+
+1.  Mở thư mục chứa file `index.html` và `index.tsx`.
+2.  Không cần cài đặt `npm install` hay `node_modules`.
+3.  **Cấu hình API Endpoint:** Tìm trong file `index.tsx` (hoặc file JS tương ứng), cập nhật hằng số `API_BASE_URL` trỏ về địa chỉ Backend đang chạy (ví dụ: `https://localhost:5001`).
+4.  Sử dụng Live Server (VS Code Extension) hoặc mở trực tiếp file `index.html` trên trình duyệt.
+
+### 4.4. Kết nối hệ thống
+
+Để Frontend gọi được Backend, bạn cần đảm bảo Backend đã cấu hình **CORS (Cross-Origin Resource Sharing)**.
+Trong file `Program.cs` của Backend, hãy chắc chắn có đoạn code cho phép domain của Frontend truy cập, hoặc cho phép tất cả (chỉ dùng cho môi trường Dev):
+`app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());`
+
+---
+
+## 5. API DOCUMENTATION (TÀI LIỆU KỸ THUẬT API)
+
+Sau khi chạy Backend, bạn có thể truy cập **Swagger UI** tại địa chỉ `/swagger` để xem tài liệu chi tiết và test API. Dưới đây là tóm tắt các Endpoints chính:
+
+**Authentication**
+*   `POST /api/auth/login`: Đăng nhập hệ thống.
+*   `POST /api/auth/register`: Đăng ký tài khoản mới.
+
+**Products**
+*   `GET /api/products`: Lấy danh sách sản phẩm.
+*   `GET /api/products/{id}`: Lấy chi tiết sản phẩm.
+*   `POST /api/products`: Thêm sản phẩm mới (Admin only).
+
+**Orders**
+*   `GET /api/orders`: Lấy danh sách đơn hàng (có hỗ trợ filter theo user).
+*   `POST /api/orders`: Tạo đơn hàng mới.
+*   `PUT /api/orders/{id}/status`: Cập nhật trạng thái đơn hàng (Admin only).
+
+**Users**
+*   `GET /api/users`: Lấy danh sách người dùng (Admin only).
+
+---
+
+## 6. LỘ TRÌNH PHÁT TRIỂN VÀ BẢO TRÌ
+
+Dự án này được thiết kế với tầm nhìn dài hạn. Các tính năng dự kiến phát triển trong tương lai:
+*   **Redis Caching:** Tích hợp bộ nhớ đệm để tăng tốc độ truy vấn danh sách sản phẩm.
+*   **Real-time Notification:** Sử dụng SignalR để thông báo cho Admin ngay khi có đơn hàng mới vừa được tạo.
+*   **Payment Gateway:** Tích hợp cổng thanh toán trực tuyến (VNPAY, MoMo).
+*   **Microservices Transition:** Khi hệ thống lớn lên, có thể tách module Orders, Products và Users thành các Services riêng biệt chạy trong Docker Containers.
+
+---
+
+**Made with love by Quỳnh Anh**
